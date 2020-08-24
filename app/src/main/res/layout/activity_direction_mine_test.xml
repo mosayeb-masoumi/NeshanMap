@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DirectionMineTest">
+
+    <org.neshan.ui.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical"
+        tools:ignore="RtlCompat">
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="clear map"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/btn_clear_map"/>
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="clear route"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/btn_clear_route"/>
+
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="route"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/btn_route"
+            tools:ignore="RtlCompat" />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="current loc"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/btn_current_location"
+            tools:ignore="RtlCompat" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

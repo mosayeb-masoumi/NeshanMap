@@ -1,4 +1,4 @@
-package com.minetestdadeh.mapneshan;
+package com.minetestdadeh.mapneshan.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
