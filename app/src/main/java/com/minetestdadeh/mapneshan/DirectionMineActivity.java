@@ -59,7 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DirectionMineTest extends AppCompatActivity {
+public class DirectionMineActivity extends AppCompatActivity {
 
     Button btn_clear_map,btn_clear_route,btn_route ,btn_current_location;
 
