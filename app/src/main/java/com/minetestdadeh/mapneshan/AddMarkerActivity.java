@@ -34,7 +34,6 @@ import org.neshan.utils.BitmapUtils;
 import org.neshan.vectorelements.Marker;
 
 public class AddMarkerActivity extends AppCompatActivity {
-
     // layer number in which map is added
     final int BASE_MAP_INDEX = 0;
 
@@ -48,8 +47,6 @@ public class AddMarkerActivity extends AppCompatActivity {
     long markerId = 0;
     // marker animation style
     AnimationStyle animSt;
-
-
 
 
 
@@ -99,7 +96,6 @@ public class AddMarkerActivity extends AppCompatActivity {
     // We use findViewByID for every element in our layout file here
     private void initViews() {
         map = findViewById(R.id.map);
-
     }
 
 
@@ -156,14 +152,22 @@ public class AddMarkerActivity extends AppCompatActivity {
         markerLayer.setVectorElementEventListener(new VectorElementEventListener() {
                                                       @Override
                                                       public boolean onVectorElementClicked(ElementClickData clickInfo) {
-
-                                                          if (clickInfo.getClickType() == ClickType.CLICK_TYPE_SINGLE) {
-
-                                                              AddMarkerActivity.this.runOnUiThread(new Runnable() {
+                                                          // If a double click happens on a marker...
+                                                          if (clickInfo.getClickType() == ClickType.CLICK_TYPE_DOUBLE) {
+                                                              final long removeId = clickInfo.getVectorElement().getMetaDataElement("id").getLong();   // soooo important
+                                                              runOnUiThread(new Runnable() {
+                                                                  @Override
                                                                   public void run() {
-                                                                      Toast.makeText(AddMarkerActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+                                                                      Toast.makeText(AddMarkerActivity.this, "نشانگر شماره " + removeId + " حذف شد!", Toast.LENGTH_SHORT).show();
                                                                   }
                                                               });
+                                                              //getting marker reference from clickInfo and remove that marker from markerLayer
+                                                              markerLayer.remove(clickInfo.getVectorElement());
+
+                                                              // If a single click happens...
+                                                          } else if (clickInfo.getClickType() == ClickType.CLICK_TYPE_SINGLE) {
+                                                              // changing marker to blue
+                                                              changeMarkerToBlue((Marker)clickInfo.getVectorElement());
                                                           }
                                                           return true;
                                                       }
@@ -172,10 +176,16 @@ public class AddMarkerActivity extends AppCompatActivity {
         );
     }
 
+    private void changeMarkerToBlue(Marker redMarker){
+        // create new marker style
+        MarkerStyleCreator markStCr = new MarkerStyleCreator();
+        markStCr.setSize(30f);
+        // Setting a new bitmap as marker
+//        markStCr.setBitmap(BitmapUtils.createBitmapFromAndroidBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_marker_blue)));
+        markStCr.setAnimationStyle(animSt);
+        MarkerStyle blueMarkSt = markStCr.buildStyle();
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        // changing marker style using setStyle
+        redMarker.setStyle(blueMarkSt);
     }
 }
