@@ -13,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TrafficActivity"></activity>
+        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".NameOfAreaActivity" />
+        <activity android:name=".AddressAPIretrofit" />
+        <activity android:name=".TrafficActivity" />
         <activity android:name=".DirectionMineActivity" />
         <activity android:name=".DirectionActivity" />
         <activity android:name=".AddMarkerActivity" />

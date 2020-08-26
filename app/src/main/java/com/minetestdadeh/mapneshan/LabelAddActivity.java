@@ -99,4 +99,10 @@ public class LabelAddActivity extends AppCompatActivity {
 
         labelLayer.add(label);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

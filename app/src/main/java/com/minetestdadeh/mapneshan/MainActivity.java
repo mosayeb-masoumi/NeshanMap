@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_currentlocation;
     Button btn_night_mode;
     Button btn_day_mode;
-    Button btn_btn_reset_camera;
+    Button btn_reset_camera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_btn_reset_camera.setOnClickListener(new View.OnClickListener() {
+        btn_reset_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -182,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
         btn_currentlocation = findViewById(R.id.btn_currentlocation);
         btn_night_mode = findViewById(R.id.btn_night_mode);
         btn_day_mode = findViewById(R.id.btn_day_mode);
+        btn_reset_camera  =findViewById(R.id.btn_reset_camera);
     }
 
 //    @SuppressLint("MissingPermission")
@@ -277,6 +278,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initSideNavigation() {
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
 }

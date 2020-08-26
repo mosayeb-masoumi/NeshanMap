@@ -38,6 +38,18 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="trafic"
-        android:id="@+id/btn_trafic"/>
+        android:text="api retrofit"
+        android:id="@+id/btn_api_retrofit"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="name of area"
+        android:id="@+id/btn_name_of_area"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="search"
+        android:id="@+id/btn_search"/>
 </LinearLayout>

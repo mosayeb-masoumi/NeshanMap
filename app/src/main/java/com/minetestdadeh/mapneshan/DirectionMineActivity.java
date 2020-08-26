@@ -385,4 +385,10 @@ public class DirectionMineActivity extends AppCompatActivity {
         lineStCr.setStretchFactor(0f);
         return lineStCr.buildStyle();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
