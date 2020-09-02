@@ -290,6 +290,7 @@ public class DirectionMineActivity extends AppCompatActivity {
         btn_clear_map.setOnClickListener(view -> {
             userMarkerLayer.clear();
             lineLayer.clear();
+            ll_info.setVisibility(View.GONE);
         });
 
 
