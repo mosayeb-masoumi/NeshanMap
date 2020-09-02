@@ -55,5 +55,44 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_info"
+        android:background="#ffffff"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:layout_margin="2dp"
+            android:id="@+id/txt_distance_car"
+            android:text="total meters by car"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:textColor="#000"
+            android:id="@+id/txt_time_car"
+            android:text="total seconds by car"/>
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="#000"-->
+<!--            android:layout_margin="2dp"-->
+<!--            android:id="@+id/txt_distance_step"-->
+<!--            android:text="total meters by step"/>-->
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="#000"-->
+<!--            android:layout_margin="2dp"-->
+<!--            android:id="@+id/txt_time_step"-->
+<!--            android:text="total seconds by step"/>-->
+
+    </LinearLayout>
 
 </RelativeLayout>

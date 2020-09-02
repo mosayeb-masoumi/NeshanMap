@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,7 +25,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.minetestdadeh.mapneshan.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.minetestdadeh.mapneshan.model.direction.DirectionRoute;
 import com.minetestdadeh.mapneshan.util.PolylineEncoding;
 
 import org.json.JSONArray;
@@ -54,6 +56,7 @@ import org.neshan.utils.BitmapUtils;
 import org.neshan.vectorelements.Line;
 import org.neshan.vectorelements.Marker;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +64,7 @@ import java.util.Map;
 
 public class DirectionMineActivity extends AppCompatActivity {
 
-    Button btn_clear_map,btn_clear_route,btn_route ,btn_current_location;
+    Button btn_clear_map, btn_clear_route, btn_route, btn_current_location;
 
     final int BASE_MAP_INDEX = 0;
 
@@ -91,10 +94,13 @@ public class DirectionMineActivity extends AppCompatActivity {
     // marker animation style
     AnimationStyle animSt;
 
-    double currentLocatonLAT=0.0;
-    double currentLocatonLNG=0.0;
-    double markerLAT=0.0;
-    double markerLNG=0.0;
+    double currentLocatonLAT = 0.0;
+    double currentLocatonLNG = 0.0;
+    double markerLAT = 0.0;
+    double markerLNG = 0.0;
+
+    LinearLayout ll_info;
+    TextView txt_distance_car, txt_time_car, txt_distance_step, txt_time_step;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +110,8 @@ public class DirectionMineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_direction_mine_test);
 
         initView();
+
+        ll_info.setVisibility(View.GONE);
     }
 
     @Override
@@ -119,31 +127,31 @@ public class DirectionMineActivity extends AppCompatActivity {
         userMarkerLayer = NeshanServices.createVectorElementLayer();
         map.getLayers().add(userMarkerLayer);
 
-        // Creating a VectorElementLayer(called lineLayer) to add line to it and adding it to map's layers
         lineLayer = NeshanServices.createVectorElementLayer();
-//        markerLayer = NeshanServices.createVectorElementLayer();
         map.getLayers().add(lineLayer);
-//        map.getLayers().add(markerLayer);
 
-        // add Standard_day map to layer BASE_MAP_INDEX
+
         map.getOptions().setZoomRange(new Range(4.5f, 18f));
         map.getLayers().insert(BASE_MAP_INDEX, NeshanServices.createBaseMap(NeshanMapStyle.STANDARD_DAY));
 
         // Setting map focal position to a fixed position and setting camera zoom
-        map.setFocalPointPosition(new LngLat(51.330743, 35.767234),0 );
-        map.setZoom(14,0);
+        map.setFocalPointPosition(new LngLat(51.330743, 35.767234), 0);
+        map.setZoom(14, 0);
 
-        
+
         getCurrentLocation();
-        
-        
+
 
         map.setMapEventListener(new MapEventListener() {
             @Override
             public void onMapClicked(ClickData mapClickInfo) {
                 super.onMapClicked(mapClickInfo);
 
+//                userMarkerLayer.clear();
+
                 if (mapClickInfo.getClickType() == ClickType.CLICK_TYPE_LONG && markerId < 2) {
+
+
                     LngLat clickedLocation = mapClickInfo.getClickPos();
                     addMarker(clickedLocation, markerId);
                     // increment id
@@ -197,7 +205,6 @@ public class DirectionMineActivity extends AppCompatActivity {
     }
 
 
-
     private void getCurrentLocation() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -238,7 +245,6 @@ public class DirectionMineActivity extends AppCompatActivity {
     }
 
 
-
     private void addUserMarker(LngLat loc) {
 
         userMarkerLayer.clear();
@@ -268,9 +274,18 @@ public class DirectionMineActivity extends AppCompatActivity {
         btn_clear_route = findViewById(R.id.btn_clear_route);
         btn_route = findViewById(R.id.btn_route);
         btn_current_location = findViewById(R.id.btn_current_location);
+        ll_info = findViewById(R.id.ll_info);
+        txt_distance_car = findViewById(R.id.txt_distance_car);
+        txt_time_car = findViewById(R.id.txt_time_car);
+//        txt_distance_step = findViewById(R.id.txt_distance_step);
+//        txt_time_step = findViewById(R.id.txt_time_step);
+
 
         btn_route.setOnClickListener(view -> neshanRoutingApi());
-        btn_clear_route.setOnClickListener(view -> lineLayer.clear());
+        btn_clear_route.setOnClickListener(view -> {
+            ll_info.setVisibility(View.GONE);
+            lineLayer.clear();
+        });
         btn_current_location.setOnClickListener(view -> getCurrentLocation());
         btn_clear_map.setOnClickListener(view -> {
             userMarkerLayer.clear();
@@ -281,10 +296,9 @@ public class DirectionMineActivity extends AppCompatActivity {
     }
 
 
-
     private void neshanRoutingApi() {
 
-        String requestURL = "https://api.neshan.org/v2/direction?origin=" + currentLocatonLAT+ "," + currentLocatonLNG + "&destination=" + markerLAT + "," + markerLNG;
+        String requestURL = "https://api.neshan.org/v2/direction?origin=" + currentLocatonLAT + "," + currentLocatonLNG + "&destination=" + markerLAT + "," + markerLNG;
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -296,7 +310,42 @@ public class DirectionMineActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
+
                             lineLayer.clear();
+                            //mine covert
+
+                            Gson gson2 = new Gson();
+
+                            Type type = new TypeToken<DirectionRoute>() {
+                            }.getType();
+                            DirectionRoute model = gson2.fromJson(response, type);
+
+
+                            int totalMetersCar = 0;
+                            int totalSecondsCar = 0;
+
+
+                            for (int i = 0; i < model.routes.size(); i++) {
+                                for (int j = 0; j < model.routes.get(i).legs.size(); j++) {
+                                    totalMetersCar += model.routes.get(i).legs.get(j).distance.value;
+                                    totalSecondsCar += model.routes.get(i).legs.get(j).duration.value;
+
+//                                    for (int k = 0; k <model.routes.get(i).legs.get(j).steps.size(); k++) {
+//                                        totalMetersStep += model.routes.get(i).legs.get(j).steps.get(k).distance.value;
+//                                        totalSecondsStep += model.routes.get(i).legs.get(j).steps.get(k).duration.value;
+//                                    }
+
+                                }
+                            }
+
+
+
+                            ll_info.setVisibility(View.VISIBLE);
+                            txt_distance_car.setText(totalMetersCar + "meter by car");
+                            txt_time_car.setText((totalSecondsCar / 60) + "minute by car");
+
+
+
                             JSONObject obj = new JSONObject(response);
                             String encodedOverviewPath = obj.getJSONArray("routes").getJSONObject(0).getJSONObject("overview_polyline").getString("points");
                             JSONArray stepByStepPath = obj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
@@ -324,10 +373,10 @@ public class DirectionMineActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<>();
+                Map<String, String> params = new HashMap<>();
                 // TODO: replace "YOUR_API_KEY" with your api key
                 params.put("Api-Key", "service.VNlPhrWb3wYRzEYmstQh3GrAXyhyaN55AqUSRR3V");
                 return params;
@@ -337,7 +386,6 @@ public class DirectionMineActivity extends AppCompatActivity {
         // Add the request to the queue
         requestQueue.add(reverseGeoSearchRequest);
     }
-
 
 
     // Drawing line on map
@@ -367,22 +415,23 @@ public class DirectionMineActivity extends AppCompatActivity {
         if (overview) {
             double centerFocalPositionX = (centerFirstMarkerX + userMarkerLayer.getAll().get(1).getGeometry().getCenterPos().getX()) / 2;
             double centerFocalPositionY = (centerFirstMarkerY + userMarkerLayer.getAll().get(1).getGeometry().getCenterPos().getY()) / 2;
-            map.setFocalPointPosition(new LngLat(centerFocalPositionX, centerFocalPositionY),0.5f );
-            map.setZoom(14,0.5f);
+            map.setFocalPointPosition(new LngLat(centerFocalPositionX, centerFocalPositionY), 0.5f);
+            map.setZoom(14, 0.5f);
         } else {
-            map.setFocalPointPosition(new LngLat(centerFirstMarkerX, centerFirstMarkerY),0.5f );
-            map.setZoom(18,0.5f);
+            map.setFocalPointPosition(new LngLat(centerFirstMarkerX, centerFirstMarkerY), 0.5f);
+            map.setZoom(18, 0.5f);
         }
 
     }
 
     // In this method we create a LineStyleCreator, set its features and call buildStyle() method
     // on it and return the LineStyle object (the same routine as crating a marker style)
-    private LineStyle getLineStyle(){
+    private LineStyle getLineStyle() {
         LineStyleCreator lineStCr = new LineStyleCreator();
-        lineStCr.setColor(new ARGB((short) 2, (short) 119, (short) 189, (short)190));
+        lineStCr.setColor(new ARGB((short) 2, (short) 119, (short) 189, (short) 190));
         lineStCr.setWidth(10f);
         lineStCr.setStretchFactor(0f);
+
         return lineStCr.buildStyle();
     }
 

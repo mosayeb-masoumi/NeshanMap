@@ -22,8 +22,15 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Label marker activity"
+        android:id="@+id/btn_label_marker"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="add marker activity"
         android:id="@+id/btn_add_marker"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

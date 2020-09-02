@@ -9,7 +9,7 @@ import android.widget.Button;
 public class SplashActivity extends AppCompatActivity {
 
     Button btn_main,btn_label ,btn_add_marker,btn_direction
-            ,btn_myDirection,btn_api_retrofit,btn_name_of_area ,btn_search;
+            ,btn_myDirection,btn_api_retrofit,btn_name_of_area ,btn_search ,btn_label_marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
         btn_api_retrofit = findViewById(R.id.btn_api_retrofit);
         btn_name_of_area = findViewById(R.id.btn_name_of_area);
         btn_search = findViewById(R.id.btn_search);
+        btn_label_marker = findViewById(R.id.btn_label_marker);
 
         btn_main.setOnClickListener(view -> startActivity(new Intent(SplashActivity.this,MainActivity.class)));
         btn_label.setOnClickListener(view -> startActivity(new Intent(SplashActivity.this, LabelAddActivity.class)));
@@ -33,6 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         btn_api_retrofit.setOnClickListener(view -> startActivity(new Intent(SplashActivity.this, AddressAPIretrofit.class)));
         btn_name_of_area.setOnClickListener(view -> startActivity(new Intent(SplashActivity.this, NameOfAreaActivity.class)));
         btn_search.setOnClickListener(view -> startActivity(new Intent(SplashActivity.this, SearchActivity.class)));
+        btn_label_marker.setOnClickListener(view -> startActivity(new Intent(SplashActivity.this, LabelMarkerActivity.class)));
 
     }
 }
